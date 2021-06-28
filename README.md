@@ -9,5 +9,6 @@
 - シミュレータ用パッケージ
 ### 必要パッケージ
 - ros-melodic-hector-models
+- ros-melodic-urg-node
 - TODO: gazaboでicart_middleを動かせるように
 - TODO: simple_icart_middle.urdfの寸法を正確に
