@@ -32,11 +32,14 @@
 
     <!-- convert joint states to TF transforms for rviz, etc -->
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-        respawn="false" output="log" ns="/tonorobo_simulator_robot" />
+        respawn="false" output="log" ns="/simple_icart_middle" />
     <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"
-        output="log" ns="/tonorobo_simulator_robot" />
+        output="log" ns="/simple_icart_middle" />
 
     <!-- rviz -->
     <node name="rviz" pkg="rviz" type="rviz" required="true" args=""/>
+
+    <!-- get_sensors_node -->
+    <node name="get_sensors_node" pkg="rwrc_simulator" type="get_sensors_node" required="true" />
 
 </launch>
