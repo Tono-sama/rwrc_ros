@@ -37,10 +37,10 @@ struct _sensor_data{
 };
 extern _sensor_data sensor_data;
 
-// 点群データ(ロボット基準、現在地図座標基準)
+// 座標変換後点群データ
 struct _pointcloud{
-	sensor_msgs::LaserScan robot;
-	sensor_msgs::LaserScan current_map;
+	sensor_msgs::LaserScan robot; // ロボット基準
+	sensor_msgs::LaserScan current_map; //現在地図座標基準
 };
 extern _pointcloud pointcloud;
 
