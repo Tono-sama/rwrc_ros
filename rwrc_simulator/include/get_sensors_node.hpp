@@ -13,7 +13,12 @@
 // オドメトリ
 #include <nav_msgs/Odometry.h>
 // tf
+#include <tf/transform_broadcaster.h>
 #include <tf2_msgs/TFMessage.h>
+#include <tf2/LinearMath/Quaternion.h>
+
+static const double RtoD = 57.29578;
+static const double DtoR = 0.0174532;
 
 // ロボット座標用構造体
 struct _xyo{
@@ -44,14 +49,9 @@ struct _pointcloud{
 };
 extern _pointcloud pointcloud;
 
-// subscriber
-extern ros::Subscriber laserscan_sub;
-extern ros::Subscriber imu_sub;
-extern ros::Subscriber jointstate_sub;
+// TODO: tf追加
 // publisher
 extern ros::Publisher odom_pub;
-
-
 
 // include.h
 
@@ -65,5 +65,15 @@ extern void LaserScan_callback(const sensor_msgs::LaserScan::ConstPtr &laserscan
 extern void Imu_callback(const sensor_msgs::Imu::ConstPtr &imu_msg);
 extern void JointState_callback(const sensor_msgs::JointState::ConstPtr &jointstate_msg);
 extern void Loop(const ros::TimerEvent&);
+
+
+// ros_util.cpp
+extern double Modif_radian(double rad);
+extern double Tf_quat_to_yaw(const tf::Quaternion _q);
+extern double Pose_quat_to_yaw(const geometry_msgs::Quaternion _q);
+extern geometry_msgs::Transform Pose_to_tf(const geometry_msgs::Pose p);
+extern geometry_msgs::Pose Tf_to_pose(const geometry_msgs::Transform t);
+extern _xyo Pose_to_xyo(const geometry_msgs::Pose p);
+extern geometry_msgs::Pose Xyo_to_pose(const _xyo p);
 
 #endif
