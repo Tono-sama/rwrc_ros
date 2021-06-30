@@ -36,10 +36,30 @@ void Calc_odom(){
 	odom_msg.pose.pose = Xyo_to_pose(sensor_data.n_odom);
 	odom_pub.publish(odom_msg);
 	// TODO: tf出力(点群座標変換で必要なので先に計算)
+	odom_to_robot_tf_msg.transforms.resize(1);
+	odom_to_robot_tf_msg.transforms[0].header.frame_id = "odom";
+	odom_to_robot_tf_msg.transforms[0].child_frame_id = "base_link";
+	odom_to_robot_tf_msg.transforms[0].header.stamp = odom_msg.header.stamp;
+	odom_to_robot_tf_msg.transforms[0].transform = Pose_to_tf(odom_msg.pose.pose);
+  odom_to_robot_tf_pub.publish(odom_to_robot_tf_msg);
 }
 
+// 点群座標変換
 void Trans_pointcloud(){
-// TODO: 点群座標変換
+  try{
+    listener->waitForTransform("odom", "hokuyo_link", raw_topic.laser_scan.header.stamp, ros::Duration(0.15));
+    // listener.waitForTransform("odom", "hokuyo_link", raw_topic.laser_scan.header.stamp, ros::Duration(0.15));
+		sensor_msgs::PointCloud pc_in;
+		sensor_msgs::PointCloud pc_trans;
+		LaserScanToPointCloud->projectLaser(raw_topic.laser_scan, pc_in);
+		listener->transformPointCloud("odom", raw_topic.laser_scan.header.stamp, pc_in, "hokuyo_link", pc_trans);
+		// listener.transformPointCloud("odom", raw_topic.laser_scan.header.stamp, pc_in, "hokuyo_link", pc_trans);
+		odom_point_cloud_pub.publish(pc_trans);
+  }catch(tf::TransformException ex){
+    ROS_ERROR("Trans_pointcloud tf_ex\n%s", ex.what());
+		// ros::Duration(0.1).sleep();
+    return;
+  }
 }
 
 // callback関数

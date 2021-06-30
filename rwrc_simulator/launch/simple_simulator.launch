@@ -37,7 +37,7 @@
         output="log" ns="/simple_icart_middle" />
 
     <!-- rviz -->
-    <node name="rviz" pkg="rviz" type="rviz" required="true" args=""/>
+    <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find rwrc_simulator)/rviz/simple_simulator.rviz"/>
 
     <!-- get_sensors_node -->
     <node name="get_sensors_node" pkg="rwrc_simulator" type="get_sensors_node" required="true" />

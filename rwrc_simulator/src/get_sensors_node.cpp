@@ -4,8 +4,14 @@
 _raw_topic raw_topic;
 _sensor_data sensor_data;
 nav_msgs::Odometry odom_msg;
+tf2_msgs::TFMessage odom_to_robot_tf_msg;
 _pointcloud pointcloud;
+tf::TransformListener *listener;
+// tf::TransformListener listener;
+laser_geometry::LaserProjection *LaserScanToPointCloud;
 ros::Publisher odom_pub;
+ros::Publisher odom_to_robot_tf_pub;
+ros::Publisher odom_point_cloud_pub;
 
 void Init(){
 // グローバル変数初期化
@@ -18,6 +24,8 @@ void Init(){
 	// TODO:ROS topicも初期化？
 	odom_msg.header.frame_id = "odom";
 	odom_msg.child_frame_id = "base_link";
+	LaserScanToPointCloud = new laser_geometry::LaserProjection();
+	listener = new tf::TransformListener();
 }
 
 int main(int argc, char **argv){
@@ -31,6 +39,8 @@ int main(int argc, char **argv){
 
 	// publisher
 	odom_pub = n.advertise<nav_msgs::Odometry>("odom", 1);
+	odom_to_robot_tf_pub = n.advertise<tf2_msgs::TFMessage>("/tf", 1);
+	odom_point_cloud_pub = n.advertise<sensor_msgs::PointCloud>("/trans_point_cloud", 1);
 	// subscriber
 	ros::Subscriber laserscan_sub = n.subscribe("/scan", 1, LaserScan_callback);
 	ros::Subscriber imu_sub = n.subscribe("/imu", 1, Imu_callback);

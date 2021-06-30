@@ -10,12 +10,16 @@
 #include <sensor_msgs/LaserScan.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/JointState.h>
+#include <sensor_msgs/point_cloud_conversion.h>
+#include <sensor_msgs/PointCloud.h>
 // オドメトリ
 #include <nav_msgs/Odometry.h>
 // tf
+#include <tf/transform_listener.h>
 #include <tf/transform_broadcaster.h>
 #include <tf2_msgs/TFMessage.h>
 #include <tf2/LinearMath/Quaternion.h>
+#include <laser_geometry/laser_geometry.h>
 
 static const double RtoD = 57.29578;
 static const double DtoR = 0.0174532;
@@ -45,18 +49,27 @@ struct _sensor_data{
 };
 extern _sensor_data sensor_data;
 
+// TODO: ros topic 構造体作る？
 extern nav_msgs::Odometry odom_msg;
+extern tf2_msgs::TFMessage odom_to_robot_tf_msg;
 
 // 座標変換後点群データ
 struct _pointcloud{
-	sensor_msgs::LaserScan robot; // ロボット基準
-	sensor_msgs::LaserScan current_map; //現在地図座標基準
+	sensor_msgs::PointCloud robot; // ロボット基準
+	sensor_msgs::PointCloud current_map; //現在地図座標基準
 };
 extern _pointcloud pointcloud;
+
+// TFを用いた座標変換用
+extern tf::TransformListener *listener;
+// extern tf::TransformListener listener;
+extern laser_geometry::LaserProjection *LaserScanToPointCloud;
 
 // TODO: tf追加
 // publisher
 extern ros::Publisher odom_pub;
+extern ros::Publisher odom_to_robot_tf_pub;
+extern ros::Publisher odom_point_cloud_pub;
 
 // include.h
 
