@@ -3,10 +3,10 @@
 // センサ生データからオドメトリ計算用の値を取得
 void Get_sensors(){
 	// imu
-	double n_o_tmp = Pose_quat_to_yaw(raw_topic.imu.orientation);
-	double o_o_tmp = Modif_radian(sensor_data.o_o);
-	sensor_data.d_o = Modif_radian(n_o_tmp - o_o_tmp);
+	const double n_o_tmp = Pose_quat_to_yaw(raw_topic.imu.orientation);
 	sensor_data.o_o = sensor_data.n_o;
+	const double o_o_tmp = Modif_radian(sensor_data.o_o);
+	sensor_data.d_o = Modif_radian(n_o_tmp-o_o_tmp);
 	sensor_data.n_o = sensor_data.o_o + sensor_data.d_o;
 
 	// joint_state
@@ -29,9 +29,8 @@ void Calc_odom(){
 	sensor_data.o_odom = sensor_data.n_odom;
 	sensor_data.n_odom.x = sensor_data.o_odom.x + sensor_data.d_dis*cos(sensor_data.o_odom.o);
 	sensor_data.n_odom.y = sensor_data.o_odom.y + sensor_data.d_dis*sin(sensor_data.o_odom.o);
-	// TODO: 差分の累積だと角度が振動する問題
-	// sensor_data.n_odom.o = sensor_data.o_odom.o + sensor_data.d_o;
-	sensor_data.n_odom.o = Pose_quat_to_yaw(raw_topic.imu.orientation);
+	sensor_data.n_odom.o = sensor_data.o_odom.o + sensor_data.d_o;
+
 	// odom topic出力
 	// odom_msg.header.stamp = ros::WallTime::now();
 	odom_msg.header.stamp = ros::Time::now();
@@ -45,7 +44,8 @@ void Calc_odom(){
 	odom_to_robot_tf_msg.transforms[0].transform = Pose_to_tf(odom_msg.pose.pose);
   odom_to_robot_tf_pub.publish(odom_to_robot_tf_msg);
 	// debug
-	printf("dis=%lf[m], theta=%lf[deg]\n",sensor_data.dis,sensor_data.n_odom.o*RtoD);
+	// printf("dis=%lf[m], theta=%lf[deg]\n",sensor_data.dis,sensor_data.n_odom.o*RtoD);
+
 }
 
 // 点群座標変換
