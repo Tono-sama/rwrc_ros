@@ -40,6 +40,6 @@
     <node name="rviz" pkg="rviz" type="rviz" required="true" args="-d $(find rwrc_simulator)/rviz/simple_simulator.rviz"/>
 
     <!-- get_sensors_node -->
-    <node name="get_sensors_node" pkg="rwrc_simulator" type="get_sensors_node" required="true" />
+    <node name="get_sensors_node" pkg="rwrc_simulator" type="get_sensors_node" required="true" output="screen"/>
 
 </launch>

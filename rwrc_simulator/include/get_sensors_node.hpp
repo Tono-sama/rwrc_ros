@@ -65,7 +65,6 @@ extern tf::TransformListener *listener;
 // extern tf::TransformListener listener;
 extern laser_geometry::LaserProjection *LaserScanToPointCloud;
 
-// TODO: tf追加
 // publisher
 extern ros::Publisher odom_pub;
 extern ros::Publisher odom_to_robot_tf_pub;

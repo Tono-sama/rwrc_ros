@@ -29,19 +29,23 @@ void Calc_odom(){
 	sensor_data.o_odom = sensor_data.n_odom;
 	sensor_data.n_odom.x = sensor_data.o_odom.x + sensor_data.d_dis*cos(sensor_data.o_odom.o);
 	sensor_data.n_odom.y = sensor_data.o_odom.y + sensor_data.d_dis*sin(sensor_data.o_odom.o);
-	sensor_data.n_odom.o = sensor_data.o_odom.o + sensor_data.d_o;
-	// TODO: odom topic出力
+	// TODO: 差分の累積だと角度が振動する問題
+	// sensor_data.n_odom.o = sensor_data.o_odom.o + sensor_data.d_o;
+	sensor_data.n_odom.o = Pose_quat_to_yaw(raw_topic.imu.orientation);
+	// odom topic出力
 	// odom_msg.header.stamp = ros::WallTime::now();
 	odom_msg.header.stamp = ros::Time::now();
 	odom_msg.pose.pose = Xyo_to_pose(sensor_data.n_odom);
 	odom_pub.publish(odom_msg);
-	// TODO: tf出力(点群座標変換で必要なので先に計算)
+	// tf出力(点群座標変換で必要なので先に計算)
 	odom_to_robot_tf_msg.transforms.resize(1);
 	odom_to_robot_tf_msg.transforms[0].header.frame_id = "odom";
 	odom_to_robot_tf_msg.transforms[0].child_frame_id = "base_link";
 	odom_to_robot_tf_msg.transforms[0].header.stamp = odom_msg.header.stamp;
 	odom_to_robot_tf_msg.transforms[0].transform = Pose_to_tf(odom_msg.pose.pose);
   odom_to_robot_tf_pub.publish(odom_to_robot_tf_msg);
+	// debug
+	printf("dis=%lf[m], theta=%lf[deg]\n",sensor_data.dis,sensor_data.n_odom.o*RtoD);
 }
 
 // 点群座標変換
