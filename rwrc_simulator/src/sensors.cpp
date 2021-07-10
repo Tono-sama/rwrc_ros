@@ -11,20 +11,26 @@ void Get_sensors(){
 
 	// joint_state
 	// name: [left_wheel_joint, right_wheel_joint]
-	sensor_data.o_l = sensor_data.n_l;
-	sensor_data.o_r = sensor_data.n_r;
+	sensor_data.o_l_rad = sensor_data.n_l_rad;
+	sensor_data.o_r_rad = sensor_data.n_r_rad;
+	double tmp_n_l_rad = sensor_data.o_l_rad;
+	double tmp_n_r_rad = sensor_data.o_r_rad;
 	// TODO: joint_stateのnameを確認する？
 	if(raw_topic.joint_state.position.size()>=2){
-		sensor_data.n_l = raw_topic.joint_state.position[0] * wheel_rad_to_m_L;
-		sensor_data.n_r = raw_topic.joint_state.position[1] * wheel_rad_to_m_R;
+		tmp_n_l_rad = Modif_radian(raw_topic.joint_state.position[0]);
+		tmp_n_r_rad = Modif_radian(raw_topic.joint_state.position[1]);
 	}
-	sensor_data.d_l = Modif_radian(sensor_data.n_l-sensor_data.o_l);
-	sensor_data.d_r = Modif_radian(sensor_data.n_r-sensor_data.o_r);
+	sensor_data.n_l_rad = tmp_n_l_rad;
+	sensor_data.n_r_rad = tmp_n_r_rad;
+	sensor_data.d_l_rad = Modif_radian(sensor_data.n_l_rad - sensor_data.o_l_rad);
+	sensor_data.d_r_rad = Modif_radian(sensor_data.n_r_rad - sensor_data.o_r_rad);
+	sensor_data.d_l_m = sensor_data.d_l_rad * wheel_rad_to_m_L;
+	sensor_data.d_r_m = sensor_data.d_r_rad * wheel_rad_to_m_R;	
 }
 
 // odom計算
 void Calc_odom(){
-	sensor_data.d_dis = (sensor_data.d_l + sensor_data.d_r)/2.0;
+	sensor_data.d_dis = (sensor_data.d_l_m + sensor_data.d_r_m)/2.0;
 	sensor_data.dis += sensor_data.d_dis;
 	sensor_data.o_odom = sensor_data.n_odom;
 	sensor_data.n_odom.x = sensor_data.o_odom.x + sensor_data.d_dis*cos(sensor_data.o_odom.o);

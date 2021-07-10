@@ -16,8 +16,9 @@ ros::Publisher odom_point_cloud_pub;
 void Init(){
 // グローバル変数初期化
 	sensor_data.n_o=0.0;sensor_data.o_o=0.0;sensor_data.d_o=0.0;
-	sensor_data.n_l=0.0;sensor_data.o_l=0.0;sensor_data.d_l=0.0;
-	sensor_data.n_r=0.0;sensor_data.o_r=0.0;sensor_data.d_r=0.0;
+	sensor_data.n_l_rad=0.0;sensor_data.o_l_rad=0.0;sensor_data.d_r_rad=0.0;
+	sensor_data.n_r_rad=0.0;sensor_data.o_r_rad=0.0;sensor_data.d_r_rad=0.0;
+	sensor_data.d_l_m=0.0;sensor_data.d_r_m=0.0;
 	sensor_data.d_dis=0.0;sensor_data.dis=0.0;
 	sensor_data.n_odom.x=0.0;sensor_data.n_odom.y=0.0;sensor_data.n_odom.o=0.0;
 	sensor_data.o_odom.x=0.0;sensor_data.o_odom.y=0.0;sensor_data.o_odom.o=0.0;

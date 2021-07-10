@@ -42,8 +42,10 @@ extern _raw_topic raw_topic;
 // センサデータ(オドメトリ計算用)構造体
 struct _sensor_data{
 	double n_o,o_o,d_o; // ヨー角(-pi<d_o<pi)
-	double n_l,o_l,d_l; // 左のエンコーダ値[m]
-	double n_r,o_r,d_r; // 右のエンコーダ値[m]
+	double n_l_rad,o_l_rad,d_l_rad; // 左のエンコーダ値[rad]
+	double n_r_rad,o_r_rad,d_r_rad; // 右のエンコーダ値[rad]
+	double d_l_m; // 左のエンコーダ値[m]
+	double d_r_m; // 右のエンコーダ値[m]
 	double d_dis,dis; // 走行道のり(差分、累積)
 	_xyo n_odom,o_odom; // オドメトリ
 };
